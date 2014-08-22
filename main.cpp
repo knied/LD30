@@ -10,6 +10,7 @@
 #include "SDLClasses.h"
 #include "gl3w.h"
 #include "Game.h"
+#include "OBJModel.h"
 
 #ifdef __APPLE__
 #include "MacOSX.h"
@@ -22,7 +23,7 @@ int main(int argc, char* argv[]) {
     std::string resource_path = macosx_resources_path();
 #endif
     
-    SDLSystem system(resource_path);
+    /*SDLSystem system(resource_path);
     if (!system.valid()) {
         std::cout << "ERROR: SDL could not be initialized." << std::endl;
         std::cout << "exiting..." << std::endl;
@@ -33,7 +34,10 @@ int main(int argc, char* argv[]) {
         std::cout << "ERROR: SDL OpenGL window or context could not be initialized." << std::endl;
         std::cout << "exiting..." << std::endl;
         return -1;
-    }
+    }*/
+    
+    OBJModel model(resource_path + "teapot.obj");
+    
     /*SDLMixer mixer(system);
     if (!mixer.valid()) {
         std::cout << "ERROR: SDL_mixer could not be initialized." << std::endl;
@@ -49,7 +53,7 @@ int main(int argc, char* argv[]) {
         }
     }*/
     
-    if (gl3wInit()) {
+    /*if (gl3wInit()) {
         std::cout << "ERROR: gl3w could not be initialized." << std::endl;
         std::cout << "exiting..." << std::endl;
         return -1;
@@ -72,18 +76,18 @@ int main(int argc, char* argv[]) {
             }
         }
         
-        /*if (channel >= 0) {
+        if (channel >= 0) {
             if (!mixer.playing(channel)) {
                 std::cout << "finished playing." << std::endl;
                 channel = -1;
             }
-        }*/
+        }
         
         game.update();
         
         // end the frame
         gl_window.swap();
-    }
+    }*/
     
     std::cout << "exiting..." << std::endl;
     return 0;

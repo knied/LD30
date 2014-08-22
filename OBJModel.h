@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include "MthMatrix.h"
+#include "TextFile.h"
 
 class OBJModel {
     struct Group {
@@ -25,13 +26,23 @@ class OBJModel {
     };
     std::vector<Group> _groups;
     
+    std::vector<std::string> tokenize(std::string const& line) const;
+    void process_line(std::string const& line);
+    void process_v(std::vector<std::string> tokens);
+    void process_vt(std::vector<std::string> tokens);
+    void process_vn(std::vector<std::string> tokens);
+    void process_f(std::vector<std::string> tokens);
+    void process_g(std::vector<std::string> tokens);
+    void process_f_token(std::string const& token, int& v, int& vt, int& vn);
+    void new_group(std::string const& name);
+    float float_token(std::string const& token);
+    int int_token(std::string const& token);
+    
 public:
-    OBJModel(std::string const& filename) {
-        
-    }
-    ~OBJModel() {
-        
-    }
+    OBJModel(std::string const& filename);
+    ~OBJModel();
+    
+    
 };
 
 #endif /* defined(__LD30Xcode__OBJModel__) */

@@ -35,10 +35,10 @@ namespace GLInternal {
         enum : GLint {size = 1}; // elements of a vector type
         enum : GLenum {type = GL_FLOAT}; // opengl enum type
     };
-    
-    template<unsigned int N>
-    struct GLType<Mth::CVector<float, N>> {
-        enum : GLint {size = N}; // elements of a vector type
+	
+	template<int R, int C>
+    struct GLType<Mth::Matrix<float, R, C>> {
+        enum : GLint {size = R * C}; // elements of a vector type
         enum : GLenum {type = GL_FLOAT}; // opengl enum type
     };
     
@@ -48,9 +48,9 @@ namespace GLInternal {
         enum : GLenum {type = GL_INT}; // opengl enum type
     };
     
-    template<unsigned int N>
-    struct GLType<Mth::CVector<int, N>> {
-        enum : GLint {size = N}; // elements of a vector type
+    template<int R, int C>
+    struct GLType<Mth::Matrix<int, R, C>> {
+        enum : GLint {size = R * C}; // elements of a vector type
         enum : GLenum {type = GL_INT}; // opengl enum type
     };
     
@@ -60,9 +60,9 @@ namespace GLInternal {
         enum : GLenum {type = GL_UNSIGNED_INT}; // opengl enum type
     };
     
-    template<unsigned int N>
-    struct GLType<Mth::CVector<unsigned int, N>> {
-        enum : GLint {size = N}; // elements of a vector type
+    template<int R, int C>
+    struct GLType<Mth::Matrix<unsigned int, R, C>> {
+        enum : GLint {size = R * C}; // elements of a vector type
         enum : GLenum {type = GL_UNSIGNED_INT}; // opengl enum type
     };
     
@@ -72,9 +72,9 @@ namespace GLInternal {
         enum : GLenum {type = GL_SHORT}; // opengl enum type
     };
     
-    template<unsigned int N>
-    struct GLType<Mth::CVector<short, N>> {
-        enum : GLint {size = N}; // elements of a vector type
+    template<int R, int C>
+    struct GLType<Mth::Matrix<short, R, C>> {
+        enum : GLint {size = R * C}; // elements of a vector type
         enum : GLenum {type = GL_SHORT}; // opengl enum type
     };
     
@@ -84,9 +84,9 @@ namespace GLInternal {
         enum : GLenum {type = GL_UNSIGNED_SHORT}; // opengl enum type
     };
     
-    template<unsigned int N>
-    struct GLType<Mth::CVector<unsigned short, N>> {
-        enum : GLint {size = N}; // elements of a vector type
+    template<int R, int C>
+    struct GLType<Mth::Matrix<unsigned short, R, C>> {
+        enum : GLint {size = R * C}; // elements of a vector type
         enum : GLenum {type = GL_UNSIGNED_SHORT}; // opengl enum type
     };
     
@@ -96,9 +96,9 @@ namespace GLInternal {
         enum : GLenum {type = GL_BYTE}; // opengl enum type
     };
     
-    template<unsigned int N>
-    struct GLType<Mth::CVector<char, N>> {
-        enum : GLint {size = N}; // elements of a vector type
+    template<int R, int C>
+    struct GLType<Mth::Matrix<char, R, C>> {
+        enum : GLint {size = R * C}; // elements of a vector type
         enum : GLenum {type = GL_BYTE}; // opengl enum type
     };
     
@@ -108,9 +108,9 @@ namespace GLInternal {
         enum : GLenum {type = GL_UNSIGNED_BYTE}; // opengl enum type
     };
     
-    template<unsigned int N>
-    struct GLType<Mth::CVector<unsigned char, N>> {
-        enum : GLint {size = N}; // elements of a vector type
+    template<int R, int C>
+    struct GLType<Mth::Matrix<unsigned char, R, C>> {
+        enum : GLint {size = R * C}; // elements of a vector type
         enum : GLenum {type = GL_UNSIGNED_BYTE}; // opengl enum type
     };
     

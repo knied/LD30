@@ -10,7 +10,13 @@
 #include "SDLClasses.h"
 #include <fstream>
 #include <iostream>
+#include <cstring>
+#ifdef __APPLE__
 #include <SDL2_image/SDL_image.h>
+#else
+#include <SDL2/SDL_image.h>
+#include <GL/gl.h>
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -51,25 +57,39 @@ bool SDLSystem::valid() const {
 
 SDLGLWindow::SDLGLWindow(SDLSystem const& system, int width, int height)
 : _error(false) {
+	SDL_ClearError();
+
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 2);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,16);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
     
     _mainwindow = SDL_CreateWindow("Main Window",
                                    SDL_WINDOWPOS_CENTERED,
                                    SDL_WINDOWPOS_CENTERED,
                                    width, height,
                                    SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+								   
+	std::string error = SDL_GetError();
+	if (error.length() > 0) std::cout << error << std::endl;
     if (!_mainwindow) {
         _error = true;
-    } else {
-        _maincontext = SDL_GL_CreateContext(_mainwindow);
-        if (!_maincontext) _error = true;
+		return;
     }
+    
+	_maincontext = SDL_GL_CreateContext(_mainwindow);
+    if (!_maincontext) {
+		_error = true;
+		return;
+	}
+#ifndef __APPLE__
+		std::cout << "OpenGL Version:" << glGetString(GL_VERSION) << std::endl;
+#endif
+	error = SDL_GetError();
+	if (error.length() > 0) std::cout << error << std::endl;
 }
 
 SDLGLWindow::~SDLGLWindow() {
