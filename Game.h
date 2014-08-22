@@ -11,8 +11,21 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "GLClasses.h"
+
+////////////////////////////////////////////////////////////////////////////////
+
 class Game {
+    std::string _resource_path;
+    
+    GLVertexArray _vertex_array;
+    GLBuffer _buffer;
+    GLProgram _program;
+    GLint _model_view_projection_location;
+    
 public:
+    Game(std::string const& resource_path);
+    
     void update();
 };
 

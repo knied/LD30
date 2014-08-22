@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     
-    Game game;
+    Game game(system.resource_path());
     
     bool done = false;
     while (!done) {
