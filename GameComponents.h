@@ -9,17 +9,23 @@
 #ifndef LD30Xcode_GameComponents_h
 #define LD30Xcode_GameComponents_h
 
+#include <vector>
 #include "Components.h"
 #include "MthMatrix.h"
+#include "Character.h"
+#include "Bullet.h"
 
 typedef int Entity;
+typedef std::set<Entity> Entities;
 
 struct Collider {
     Mth::CVector<float, 2> position;
     Mth::CVector<float, 2> velocity;
     float radius;
+    std::vector<Entity> touching;
 };
 
-typedef Components<Entity, Collider> GameComponents;
+typedef Components<Entity, Collider, std::shared_ptr<Character>, std::shared_ptr<Bullet>> GameComponents;
+enum {ColliderComponent = 0, CharacterComponent = 1, BulletComponent = 2};
 
 #endif

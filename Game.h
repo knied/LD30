@@ -15,26 +15,48 @@
 #include "Sprite.h"
 #include "Character.h"
 #include "GameComponents.h"
+#include "PhysicsSystem.h"
+#include "Renderer.h"
+#include <random>
 
 ////////////////////////////////////////////////////////////////////////////////
 
 class Game {
     std::string _resource_path;
-    GLProgram _program;
-    GLint _model_view_location;
-    GLint _texture0_location;
     
     std::vector<Sprite*> _sprites;
-    std::vector<Character*> _characters;
     
     int _control_pos_x, _control_pos_y;
     int _control_neg_x, _control_neg_y;
+    int _control_fire;
     int _move_x;
     int _move_y;
+    
+    float _fire_timer;
+    
+    float _shake_x;
+    float _shake_y;
+    float _shake_x_feq;
+    float _shake_y_feq;
     
     Mth::Matrix<float, 3, 3> _projection;
     
     bool handle_inpout(SDLSystem const& system);
+    
+    GameComponents _components;
+    Entities _colliders;
+    Entity _player_character;
+    Entities _characters;
+    Entities _bullets;
+    PhysicsSystem _physics;
+    Renderer _renderer;
+    
+    Entity _next_entity;
+    
+    void start_shake();
+    
+    std::mt19937 _random_engine;
+    float random_float(float mean, float std);
     
 public:
     Game(SDLSystem const& system);
