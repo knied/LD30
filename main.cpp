@@ -10,7 +10,6 @@
 #include "SDLClasses.h"
 #include "gl3w.h"
 #include "Game.h"
-#include "OBJModel.h"
 
 #ifdef __APPLE__
 #include "MacOSX.h"
@@ -19,32 +18,34 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char* argv[]) {
+    typedef std::chrono::system_clock Clock;
+    typedef std::chrono::time_point<Clock> TimeStamp;
+    typedef std::chrono::duration<float> Seconds;
+    
 #ifdef __APPLE__
     std::string resource_path = macosx_resources_path();
 #endif
     
-    /*SDLSystem system(resource_path);
+    SDLSystem system(resource_path);
     if (!system.valid()) {
         std::cout << "ERROR: SDL could not be initialized." << std::endl;
         std::cout << "exiting..." << std::endl;
         return -1;
     }
-    SDLGLWindow gl_window(system, 800, 600);
+    SDLGLWindow gl_window(system, 1024, 768);
     if (!gl_window.valid()) {
         std::cout << "ERROR: SDL OpenGL window or context could not be initialized." << std::endl;
         std::cout << "exiting..." << std::endl;
         return -1;
-    }*/
+    }
     
-    OBJModel model(resource_path + "teapot.obj");
-    
-    /*SDLMixer mixer(system);
+    SDLMixer mixer(system);
     if (!mixer.valid()) {
         std::cout << "ERROR: SDL_mixer could not be initialized." << std::endl;
         std::cout << "exiting..." << std::endl;
         return -1;
     }
-    SDLMixerChunk chunk(mixer, "Rayman_2_music_sample.ogg");
+    /*SDLMixerChunk chunk(mixer, "Rayman_2_music_sample.ogg");
     int channel = -1;
     if (chunk.valid()) {
         channel = mixer.play(chunk, 1, 3);
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]) {
         }
     }*/
     
-    /*if (gl3wInit()) {
+    if (gl3wInit()) {
         std::cout << "ERROR: gl3w could not be initialized." << std::endl;
         std::cout << "exiting..." << std::endl;
         return -1;
@@ -64,30 +65,21 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     
-    Game game(system.resource_path());
+    Game game(system);
+    
+    TimeStamp old_time = Clock::now();
     
     bool done = false;
     while (!done) {
-        // handle input events
-        SDL_Event event;
-        while (system.poll_event(event)) {
-            if (event.type == SDL_QUIT) {
-                done = true;
-            }
-        }
+        TimeStamp new_time = Clock::now();
+        Seconds elapsed = new_time - old_time;
+        old_time = new_time;
         
-        if (channel >= 0) {
-            if (!mixer.playing(channel)) {
-                std::cout << "finished playing." << std::endl;
-                channel = -1;
-            }
-        }
-        
-        game.update();
+        done = game.update(system, elapsed.count());
         
         // end the frame
         gl_window.swap();
-    }*/
+    }
     
     std::cout << "exiting..." << std::endl;
     return 0;

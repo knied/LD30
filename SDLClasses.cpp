@@ -41,7 +41,7 @@ bool SDLSystem::show_cursor() const {
     return SDL_ShowCursor(-1) == 1 ? true : false;
 }
 
-bool SDLSystem::poll_event(SDL_Event& event) {
+bool SDLSystem::poll_event(SDL_Event& event) const {
     return SDL_PollEvent(&event);
 }
 

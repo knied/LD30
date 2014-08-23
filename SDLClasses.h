@@ -35,7 +35,7 @@ public:
     bool relative_mouse_mode() const;
     void set_show_cursor(bool enabled);
     bool show_cursor() const;
-    bool poll_event(SDL_Event& event);
+    bool poll_event(SDL_Event& event) const;
     std::string const& resource_path() const;
     bool valid() const;
 }; // SDLSystem
