@@ -43,11 +43,14 @@ public:
     float fade;
     float fire_timer_reset;
     float fire_timer;
+    float granade_timer_reset;
+    float granade_timer;
     
     Mth::Matrix<float, 3, 3> body_transformation() const;
     Mth::Matrix<float, 3, 3> gun_transformation() const;
     
     Mth::CVector<float, 2> fire_position() const;
+    Mth::CVector<float, 2> granade_position() const;
     
     Sprite* body_sprite() const;
     Sprite* gun_sprite() const;

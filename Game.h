@@ -21,6 +21,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+typedef enum : int {
+    GS_Title,
+    GS_Game
+} GameState;
+
+////////////////////////////////////////////////////////////////////////////////
+
 class Game {
     std::string _resource_path;
     
@@ -38,18 +45,25 @@ class Game {
     std::vector<Sprite*> _w1_weapon_l0;
     std::vector<Sprite*> _w1_weapon_r0;
     
+    std::vector<Sprite*> _explosion;
+    
+    Sprite* _granade;
+    
     Sprite* _bullet0;
     
     Sprite* _world_f0;
     Sprite* _world_b0;
     
+    Sprite* _title;
+    
     int _control_pos_x, _control_pos_y;
     int _control_neg_x, _control_neg_y;
     int _control_fire;
+    int _control_granade;
     int _move_x;
     int _move_y;
     
-    //float _fire_timer;
+    float _footstep_timer;
     
     float _shake_x;
     float _shake_y;
@@ -67,6 +81,8 @@ class Game {
     Entity _player_character;
     Entities _characters;
     Entities _bullets;
+    Entities _granades;
+    Entities _smokes;
     PhysicsSystem _physics;
     Renderer _renderer;
     
@@ -80,10 +96,19 @@ class Game {
     
     SDLMixer _mixer;
     std::vector<SDLMixerChunk*> _shot;
+    std::vector<SDLMixerChunk*> _footstep;
     SDLMixerChunk* _logo_musik;
+    SDLMixerChunk* _explosion_sound;
+    SDLMixerChunk* _hit_soumd;
     
     void ai(Character& monster, Collider& monster_collider,
             Character& player, Collider& player_collider);
+    
+    GameState _game_state;
+    void reset_game();
+    void title_state(float dt);
+    void in_game_state(float dt);
+    void next_state();
     
 public:
     Game(SDLSystem const& system);

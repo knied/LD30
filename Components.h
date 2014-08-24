@@ -128,6 +128,13 @@ public:
                               std::inserter(result, result.end()));
         return result;
     }
+    
+    void clear_all() {
+        _components = Tuple();
+        for (int i = 0; i < N; ++i) {
+            _sets[i] = Set();
+        }
+    }
 }; // Components
 
 ////////////////////////////////////////////////////////////////////////////////

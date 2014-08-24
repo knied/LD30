@@ -14,6 +14,8 @@
 #include "MthMatrix.h"
 #include "Character.h"
 #include "Bullet.h"
+#include "Granade.h"
+#include "Smoke.h"
 
 typedef int Entity;
 typedef std::set<Entity> Entities;
@@ -23,6 +25,7 @@ typedef enum : int {
     CG_E, // enemy
     CG_PB, // player bullet
     CG_EB, // enemy bullet
+    CG_G // granade
 } ColliderGroup;
 
 struct Collider {
@@ -33,7 +36,21 @@ struct Collider {
     ColliderGroup group;
 };
 
-typedef Components<Entity, Collider, std::shared_ptr<Character>, std::shared_ptr<Bullet>> GameComponents;
-enum {ColliderComponent = 0, CharacterComponent = 1, BulletComponent = 2};
+typedef Components<
+Entity,
+Collider,
+std::shared_ptr<Character>,
+std::shared_ptr<Bullet>,
+std::shared_ptr<Granade>,
+std::shared_ptr<Smoke>
+> GameComponents;
+
+enum {
+    ColliderComponent = 0,
+    CharacterComponent = 1,
+    BulletComponent = 2,
+    GranadeComponent = 3,
+    SmokeComponent = 4
+};
 
 #endif
