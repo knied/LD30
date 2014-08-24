@@ -30,6 +30,14 @@ class Game {
     std::vector<Sprite*> _walk_r0;
     std::vector<Sprite*> _weapon_l0;
     std::vector<Sprite*> _weapon_r0;
+    
+    std::vector<Sprite*> _w1_stand_l0;
+    std::vector<Sprite*> _w1_stand_r0;
+    std::vector<Sprite*> _w1_walk_l0;
+    std::vector<Sprite*> _w1_walk_r0;
+    std::vector<Sprite*> _w1_weapon_l0;
+    std::vector<Sprite*> _w1_weapon_r0;
+    
     Sprite* _bullet0;
     
     Sprite* _world_f0;
@@ -41,7 +49,7 @@ class Game {
     int _move_x;
     int _move_y;
     
-    float _fire_timer;
+    //float _fire_timer;
     
     float _shake_x;
     float _shake_y;
@@ -49,6 +57,8 @@ class Game {
     float _shake_y_feq;
     
     Mth::Matrix<float, 3, 3> _projection;
+    float _camera_x_f;
+    float _camera_x_b;
     
     bool handle_inpout(SDLSystem const& system);
     
@@ -62,7 +72,7 @@ class Game {
     
     Entity _next_entity;
     
-    void start_shake();
+    void start_shake(float strength);
     
     std::mt19937 _random_engine;
     float random_float(float mean, float std);
@@ -71,6 +81,9 @@ class Game {
     SDLMixer _mixer;
     std::vector<SDLMixerChunk*> _shot;
     SDLMixerChunk* _logo_musik;
+    
+    void ai(Character& monster, Collider& monster_collider,
+            Character& player, Collider& player_collider);
     
 public:
     Game(SDLSystem const& system);

@@ -18,11 +18,19 @@
 typedef int Entity;
 typedef std::set<Entity> Entities;
 
+typedef enum : int {
+    CG_P, // player
+    CG_E, // enemy
+    CG_PB, // player bullet
+    CG_EB, // enemy bullet
+} ColliderGroup;
+
 struct Collider {
     Mth::CVector<float, 2> position;
     Mth::CVector<float, 2> velocity;
     float radius;
     std::vector<Entity> touching;
+    ColliderGroup group;
 };
 
 typedef Components<Entity, Collider, std::shared_ptr<Character>, std::shared_ptr<Bullet>> GameComponents;

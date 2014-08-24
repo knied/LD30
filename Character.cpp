@@ -18,7 +18,7 @@ Character::Character(std::vector<Sprite*> const& stand_l,
 : _stand_l(stand_l), _stand_r(stand_r),
 _walk_l(walk_l), _walk_r(walk_r),
 _weapon_l(weapon_l), _weapon_r(weapon_r),
-look_x(1), look_y(-1), _timer(0.0f), _animation(0), health(100) {
+look_x(1), look_y(-1), _timer(0.0f), _animation(0), health(500), fire_timer_reset(0.2f), fire_timer(0.5f), fade(0.0f) {
     
 }
 
@@ -92,6 +92,10 @@ void Character::update(float dt) {
     _timer += dt;
     while (_timer >= 1.0f) {
         _timer = 0.0f;
+    }
+    
+    if (fire_timer > 0.0f) {
+        fire_timer -= dt;
     }
     
     fade -= 8.0f * dt;

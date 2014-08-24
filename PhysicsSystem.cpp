@@ -33,7 +33,7 @@ void PhysicsSystem::update(GameComponents& components, Entities const& entities,
     int collider_index = 0;
     
     float top = 600.0f;
-    float bottom = 0.0f;
+    float bottom = 40.0f;
     
     // find contacts
     for (Entities::const_iterator it0 = entities.begin(); it0 != entities.end(); ++it0) {
@@ -61,6 +61,17 @@ void PhysicsSystem::update(GameComponents& components, Entities const& entities,
         for (; it1 != entities.end(); ++it1) {
             Entity entity1 = *it1;
             Collider* collider1 = &components.get<ColliderComponent>(entity1);
+            
+            if ((collider0->group == CG_PB && collider1->group == CG_PB) ||
+                (collider0->group == CG_EB && collider1->group == CG_EB) ||
+                (collider0->group == CG_PB && collider1->group == CG_EB) ||
+                (collider0->group == CG_EB && collider1->group == CG_PB) ||
+                (collider0->group == CG_P && collider1->group == CG_PB) ||
+                (collider0->group == CG_PB && collider1->group == CG_P) ||
+                (collider0->group == CG_E && collider1->group == CG_EB) ||
+                (collider0->group == CG_EB && collider1->group == CG_E)) {
+                continue;
+            }
             
             Mth::CVector<float, 2> d = collider1->position - collider0->position;
             
@@ -96,6 +107,7 @@ void PhysicsSystem::update(GameComponents& components, Entities const& entities,
             float remove_impuls = remove / 2.0f;
             float new_impuls = std::min(contact.impuls + remove_impuls, 0.0f);
             float impuls_change = new_impuls - contact.impuls;
+            
             contact.impuls = new_impuls;
             contact.collider0->velocity += contact.normal * impuls_change;
             contact.collider1->velocity -= contact.normal * impuls_change;

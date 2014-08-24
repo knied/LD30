@@ -41,6 +41,8 @@ public:
     int look_y;
     int health;
     float fade;
+    float fire_timer_reset;
+    float fire_timer;
     
     Mth::Matrix<float, 3, 3> body_transformation() const;
     Mth::Matrix<float, 3, 3> gun_transformation() const;
