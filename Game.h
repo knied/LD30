@@ -24,7 +24,16 @@
 class Game {
     std::string _resource_path;
     
-    std::vector<Sprite*> _sprites;
+    std::vector<Sprite*> _stand_l0;
+    std::vector<Sprite*> _stand_r0;
+    std::vector<Sprite*> _walk_l0;
+    std::vector<Sprite*> _walk_r0;
+    std::vector<Sprite*> _weapon_l0;
+    std::vector<Sprite*> _weapon_r0;
+    Sprite* _bullet0;
+    
+    Sprite* _world_f0;
+    Sprite* _world_b0;
     
     int _control_pos_x, _control_pos_y;
     int _control_neg_x, _control_neg_y;
@@ -57,6 +66,11 @@ class Game {
     
     std::mt19937 _random_engine;
     float random_float(float mean, float std);
+    int random_int(int min, int max);
+    
+    SDLMixer _mixer;
+    std::vector<SDLMixerChunk*> _shot;
+    SDLMixerChunk* _logo_musik;
     
 public:
     Game(SDLSystem const& system);

@@ -16,42 +16,72 @@
 
 Game::Game(SDLSystem const& system)
 : _resource_path(system.resource_path()),
-_control_pos_x(0), _control_neg_x(0), _control_pos_y(0), _control_neg_y(0), _move_x(0), _move_y(0), _renderer(system),
-_next_entity(1), _shake_x(0.0f), _shake_y(0.0f), _shake_x_feq(0.0f), _shake_y_feq(0.0f) {
-    _projection = Mth::make_matrix(1.0f/800.0f, 0.0f, -1.0f,
-                                   0.0f, 1.0f/600.0f, -1.0f,
+_control_pos_x(0), _control_neg_x(0), _control_pos_y(0), _control_neg_y(0), _control_fire(0), _move_x(0), _move_y(0), _renderer(system),
+_next_entity(1), _shake_x(0.0f), _shake_y(0.0f), _shake_x_feq(0.0f), _shake_y_feq(0.0f), _mixer(system) {
+    if (!_mixer.valid()) {
+        std::cout << "error" << std::endl;
+    }
+    
+    _projection = Mth::make_matrix(1.0f/512.0f, 0.0f, -1.0f,
+                                   0.0f, 1.0f/384.0f, -1.0f,
                                    0.0f, 0.0f, 1.0f);
     
     SDLImage image_loader(system);
-    _sprites.push_back(new Sprite(image_loader, "head.png"));
-    _sprites.push_back(new Sprite(image_loader, "body.png"));
-    _sprites.push_back(new Sprite(image_loader, "gun.png"));
-    _sprites.push_back(new Sprite(image_loader, "bullet.png"));
+    _stand_l0.push_back(new Sprite(image_loader, "stand_l_1.png"));
+    _stand_l0.push_back(new Sprite(image_loader, "stand_l_2.png"));
+    _stand_r0.push_back(new Sprite(image_loader, "stand_r_1.png"));
+    _stand_r0.push_back(new Sprite(image_loader, "stand_r_2.png"));
+    _walk_l0.push_back(new Sprite(image_loader, "walk_l_1.png"));
+    _walk_l0.push_back(new Sprite(image_loader, "walk_l_2.png"));
+    _walk_l0.push_back(new Sprite(image_loader, "walk_l_3.png"));
+    _walk_l0.push_back(new Sprite(image_loader, "walk_l_4.png"));
+    _walk_r0.push_back(new Sprite(image_loader, "walk_r_1.png"));
+    _walk_r0.push_back(new Sprite(image_loader, "walk_r_2.png"));
+    _walk_r0.push_back(new Sprite(image_loader, "walk_r_3.png"));
+    _walk_r0.push_back(new Sprite(image_loader, "walk_r_4.png"));
+    _weapon_l0.push_back(new Sprite(image_loader, "weapon_l_1.png"));
+    _weapon_l0.push_back(new Sprite(image_loader, "weapon_l_2.png"));
+    _weapon_r0.push_back(new Sprite(image_loader, "weapon_r_1.png"));
+    _weapon_r0.push_back(new Sprite(image_loader, "weapon_r_2.png"));
+    _bullet0 = new Sprite(image_loader, "bullet.png");
+    _world_f0 = new Sprite(image_loader, "world_1_1.png");
+    _world_b0 = new Sprite(image_loader, "world_1_2.png");
+    
+    _shot.push_back(new SDLMixerChunk(_mixer, "Shot 01.ogg"));
+    _logo_musik = new SDLMixerChunk(_mixer, "Logo LD03 v1nn.ogg");
+    //_shot.push_back(new SDLMixerChunk(_mixer, "Shot 02.ogg"));
+    //_shot.push_back(new SDLMixerChunk(_mixer, "Shot 03.ogg"));
+    //_shot.push_back(new SDLMixerChunk(_mixer, "Shot 04.ogg"));
+    
+    _mixer.play(*_logo_musik, 0, -1);
     
     {
         _player_character = _next_entity++;
         Collider& collider = _components.add<ColliderComponent>(_player_character);
         collider.radius = 50.0f;
-        _components.add<CharacterComponent>(_player_character) = std::shared_ptr<Character>(new Character(_sprites[0], _sprites[1], _sprites[2]));
+        collider.position = Mth::make_cvector(300.0f, 300.0f);
+        _components.add<CharacterComponent>(_player_character) = std::shared_ptr<Character>(new Character(_stand_l0, _stand_r0,
+                                                                                                          _walk_l0, _walk_r0,
+                                                                                                          _weapon_l0, _weapon_r0));
         _characters.insert(_player_character);
         _colliders.insert(_player_character);
     }
     
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 2; ++i) {
         Entity entity = _next_entity++;
         Collider& collider = _components.add<ColliderComponent>(entity);
         collider.radius = 50.0f;
-        collider.position = Mth::make_cvector(300.0f + 100.0f * i, 300.0f + 100.0f * i);
-        _components.add<CharacterComponent>(entity) = std::shared_ptr<Character>(new Character(_sprites[0], _sprites[1], _sprites[2]));
+        collider.position = Mth::make_cvector(400.0f + 100.0f * i, 400.0f + 100.0f * i);
+        _components.add<CharacterComponent>(entity) = std::shared_ptr<Character>(new Character(_stand_l0, _stand_r0,
+                                                                                               _walk_l0, _walk_r0,
+                                                                                               _weapon_l0, _weapon_r0));
         _characters.insert(entity);
         _colliders.insert(entity);
     }
 }
 
 Game::~Game() {
-    for (int i = 0; i < _sprites.size(); ++i) {
-        delete _sprites[i];
-    }
+    
 }
 
 bool Game::update(SDLSystem const& system, float dt) {
@@ -79,9 +109,20 @@ bool Game::update(SDLSystem const& system, float dt) {
         _bullets.insert(bullet);
         
         std::shared_ptr<Bullet>& b = _components.add<BulletComponent>(bullet);
-        b = std::shared_ptr<Bullet>(new Bullet(_sprites[3]));
+        b = std::shared_ptr<Bullet>(new Bullet(_bullet0));
         b->look_x = player->look_x;
+        
+        _mixer.play(*_shot[0], 0, -1);
     }
+    
+    Mth::Matrix<float, 3, 3> world_trafo_f = Mth::make_matrix(1.0f, 0.0f, 1024.0f,
+                                                              0.0f, 1.0f, 420.0f,
+                                                              0.0f, 0.0f, 1.0f);
+    _renderer.add(_world_f0, _projection * shake * world_trafo_f, 3000, 0.0f);
+    Mth::Matrix<float, 3, 3> world_trafo_b = Mth::make_matrix(1.0f, 0.0f, 1024.0f,
+                                                              0.0f, 1.0f, 630.0f,
+                                                              0.0f, 0.0f, 1.0f);
+    _renderer.add(_world_b0, _projection * shake * world_trafo_b, 6000, 0.0f);
     
     std::vector<Entity> despawn_bullets;
     for (Entity entity : _bullets ) {
@@ -122,7 +163,6 @@ bool Game::update(SDLSystem const& system, float dt) {
         std::shared_ptr<Character> character = _components.get<CharacterComponent>(entity);
         Collider& collider = _components.get<ColliderComponent>(entity);
         Mth::Matrix<float, 3, 3> translation = transformation(collider.position(0), collider.position(1));
-        _renderer.add(character->head_sprite(), _projection * shake * translation * character->head_transformation(), collider.position(1), character->fade);
         _renderer.add(character->gun_sprite(), _projection * shake * translation * character->gun_transformation(), collider.position(1), character->fade);
         _renderer.add(character->body_sprite(), _projection * shake * translation * character->body_transformation(), collider.position(1), character->fade);
         
@@ -244,6 +284,11 @@ void Game::start_shake() {
 
 float Game::random_float(float min, float max) {
     std::normal_distribution<float> dist(min, max);
+    return dist(_random_engine);
+}
+
+int Game::random_int(int min, int max) {
+    std::uniform_int_distribution<int> dist(min, max);
     return dist(_random_engine);
 }
 

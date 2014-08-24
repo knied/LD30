@@ -14,20 +14,27 @@
 #include "GLClasses.h"
 
 class Character {
-    Sprite* _head;
-    Sprite* _body;
-    Sprite* _gun;
+    std::vector<Sprite*> _stand_l;
+    std::vector<Sprite*> _stand_r;
+    std::vector<Sprite*> _walk_l;
+    std::vector<Sprite*> _walk_r;
+    std::vector<Sprite*> _weapon_l;
+    std::vector<Sprite*> _weapon_r;
     
     float _timer;
     int _animation;
     
 protected:
-    virtual Mth::CVector<int, 2> head_offset() const;
     virtual Mth::CVector<int, 2> body_offset() const;
     virtual Mth::CVector<int, 2> gun_offset() const;
     
 public:
-    Character(Sprite* head, Sprite* body, Sprite* gun);
+    Character(std::vector<Sprite*> const& stand_l,
+              std::vector<Sprite*> const& stand_r,
+              std::vector<Sprite*> const& walk_l,
+              std::vector<Sprite*> const& walk_r,
+              std::vector<Sprite*> const& weapon_l,
+              std::vector<Sprite*> const& weapon_r);
     ~Character();
     
     int look_x;
@@ -35,13 +42,11 @@ public:
     int health;
     float fade;
     
-    Mth::Matrix<float, 3, 3> head_transformation() const;
     Mth::Matrix<float, 3, 3> body_transformation() const;
     Mth::Matrix<float, 3, 3> gun_transformation() const;
     
     Mth::CVector<float, 2> fire_position() const;
     
-    Sprite* head_sprite() const;
     Sprite* body_sprite() const;
     Sprite* gun_sprite() const;
     

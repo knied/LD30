@@ -18,10 +18,22 @@ struct Contact {
     float impuls;
 };
 
+struct StaticContact {
+    float distance;
+    Mth::CVector<float, 2> normal;
+    Collider* collider;
+    Entity entity;
+    float impuls;
+};
+
 void PhysicsSystem::update(GameComponents& components, Entities const& entities, float dt) {
     std::vector<Contact> contacts;
+    std::vector<StaticContact> static_contacts;
     std::vector<Collider*> colliders(entities.size());
     int collider_index = 0;
+    
+    float top = 600.0f;
+    float bottom = 0.0f;
     
     // find contacts
     for (Entities::const_iterator it0 = entities.begin(); it0 != entities.end(); ++it0) {
@@ -29,6 +41,21 @@ void PhysicsSystem::update(GameComponents& components, Entities const& entities,
         Collider* collider0 = &components.get<ColliderComponent>(entity0);
         collider0->touching.clear();
         colliders[collider_index++] = collider0;
+        
+        static_contacts.push_back({
+            top - collider0->position(1) - collider0->radius,
+            Mth::make_cvector(0.0f, 1.0f),
+            collider0,
+            entity0,
+            0.0f
+        });
+        static_contacts.push_back({
+            collider0->position(1) - bottom - collider0->radius,
+            Mth::make_cvector(0.0f, -1.0f),
+            collider0,
+            entity0,
+            0.0f
+        });
         
         Entities::const_iterator it1 = it0; ++it1;
         for (; it1 != entities.end(); ++it1) {
@@ -54,6 +81,15 @@ void PhysicsSystem::update(GameComponents& components, Entities const& entities,
     // solve contacts
     int iterations = 4;
     for (int i = 0; i < iterations; ++i) {
+        for (auto& contact : static_contacts) {
+            float relative_velocity = Mth::dot(-contact.collider->velocity, contact.normal);
+            float remove_impuls = contact.distance / dt + relative_velocity;
+            float new_impuls = std::min(contact.impuls + remove_impuls, 0.0f);
+            float impuls_change = new_impuls - contact.impuls;
+            contact.impuls = new_impuls;
+            contact.collider->velocity += contact.normal * impuls_change;
+        }
+        
         for (auto& contact : contacts) {
             float relative_velocity = Mth::dot(contact.collider1->velocity - contact.collider0->velocity, contact.normal);
             float remove = contact.distance / dt + relative_velocity;

@@ -41,7 +41,6 @@ Sprite::Sprite(SDLImage const& image_loader, std::string const& filename) {
     {
         float x = 0.5f * width;
         float y = 0.5f * height;
-        std::cout << x << " " << y << std::endl;
         GLBindBuffer bind_buffer(_buffer);
         std::vector<Mth::CVector<float, 2>> v(6);
         v[0] = Mth::make_cvector(-x, -y);

@@ -39,12 +39,12 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     
-    SDLMixer mixer(system);
+    /*SDLMixer mixer(system);
     if (!mixer.valid()) {
         std::cout << "ERROR: SDL_mixer could not be initialized." << std::endl;
         std::cout << "exiting..." << std::endl;
         return -1;
-    }
+    }*/
     /*SDLMixerChunk chunk(mixer, "Rayman_2_music_sample.ogg");
     int channel = -1;
     if (chunk.valid()) {
