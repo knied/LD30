@@ -16,6 +16,9 @@
 #include "Bullet.h"
 #include "Granade.h"
 #include "Smoke.h"
+#include "Prop.h"
+#include "Pickup.h"
+#include "Boss.h"
 
 typedef int Entity;
 typedef std::set<Entity> Entities;
@@ -25,7 +28,9 @@ typedef enum : int {
     CG_E, // enemy
     CG_PB, // player bullet
     CG_EB, // enemy bullet
-    CG_G // granade
+    CG_PG, // player granade
+    CG_EG, // enemy granade
+    CG_PR // prop
 } ColliderGroup;
 
 struct Collider {
@@ -42,7 +47,10 @@ Collider,
 std::shared_ptr<Character>,
 std::shared_ptr<Bullet>,
 std::shared_ptr<Granade>,
-std::shared_ptr<Smoke>
+std::shared_ptr<Smoke>,
+std::shared_ptr<Prop>,
+std::shared_ptr<Pickup>,
+std::shared_ptr<Boss>
 > GameComponents;
 
 enum {
@@ -50,7 +58,10 @@ enum {
     CharacterComponent = 1,
     BulletComponent = 2,
     GranadeComponent = 3,
-    SmokeComponent = 4
+    SmokeComponent = 4,
+    PropComponent = 5,
+    PickupComponent = 6,
+    BossComponent = 7
 };
 
 #endif

@@ -66,6 +66,8 @@ int main(int argc, char* argv[]) {
     }
     
     Game game(system);
+    gl_window.swap();
+    game.load(system);
     
     TimeStamp old_time = Clock::now();
     

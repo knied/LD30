@@ -15,7 +15,7 @@ Bullet::Bullet(Sprite* sprite)
 }
 
 Mth::Matrix<float, 3, 3> Bullet::transformation() const {
-    return ::transformation(9, 0);
+    return ::transformation(9, 0) * flip(velocity(0) < 0.0f, false);
 }
 
 Sprite* Bullet::sprite() const {
@@ -27,5 +27,5 @@ void Bullet::update(float dt) {
 }
 
 bool Bullet::dead() const {
-    return time > 1.0f;
+    return time > end_time;
 }

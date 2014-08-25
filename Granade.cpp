@@ -10,7 +10,7 @@
 #include "Transformation.h"
 
 Granade::Granade(Sprite* sprite)
-: time(0.0f), explosion_time(2.0f), _sprite(sprite), fade(0.0f) {
+: time(0.0f), explosion_time(0.5f), _sprite(sprite), fade(0.0f) {
     
 }
 
@@ -23,9 +23,10 @@ Mth::Matrix<float, 3, 3> Granade::transformation() const {
 }
 
 void Granade::update(float dt) {
-    fade = 0.5f + 0.5f * Mth::cos(8.0f * time);
+    //fade = 0.5f + 0.5f * Mth::cos(time);
+    fade = 0.0f;
     time += dt;
-    velocity *= 0.98f;
+    //velocity *= 0.98f;
 }
 
 bool Granade::dead() const {

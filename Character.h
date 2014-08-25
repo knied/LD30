@@ -45,6 +45,7 @@ public:
     float fire_timer;
     float granade_timer_reset;
     float granade_timer;
+    int weapon = 0;
     
     Mth::Matrix<float, 3, 3> body_transformation() const;
     Mth::Matrix<float, 3, 3> gun_transformation() const;

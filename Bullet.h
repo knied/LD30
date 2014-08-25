@@ -21,6 +21,7 @@ public:
     //int look_x;
     //int look_y;
     float time;
+    float end_time = 0.3f;
     Mth::CVector<float, 2> velocity;
     
     Mth::Matrix<float, 3, 3> transformation() const;

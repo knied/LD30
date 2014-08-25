@@ -79,6 +79,7 @@ public:
     bool paused(int channel);
     void resume(int channel);
     void stop(int channel);
+    void fade_out(int channel);
     
     bool valid() const;
 };

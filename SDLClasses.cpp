@@ -175,6 +175,10 @@ void SDLMixer::stop(int channel) {
     Mix_HaltChannel(channel);
 }
 
+void SDLMixer::fade_out(int channel) {
+    Mix_FadeOutChannel(channel, 500);
+}
+
 bool SDLMixer::valid() const {
     return !_error;
 }
