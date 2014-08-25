@@ -57,6 +57,8 @@ class Game {
     std::vector<Sprite*> _w1_walk_r0;
     std::vector<Sprite*> _w1_weapon_l0;
     std::vector<Sprite*> _w1_weapon_r0;
+    std::vector<Sprite*> _w1_weapon_l1;
+    std::vector<Sprite*> _w1_weapon_r1;
     
     std::vector<Sprite*> _boss_stand_l0;
     std::vector<Sprite*> _boss_stand_r0;
@@ -66,12 +68,16 @@ class Game {
     std::vector<Sprite*> _stage_banner;
     
     std::vector<Sprite*> _explosion;
+    std::vector<Sprite*> _boss_jump;
     
     std::vector<Sprite*> _hearts;
     
     std::vector<Sprite*> _prop_sprites;
     
+    Sprite* _win_screen;
     Sprite* _loose_screen;
+    
+    Sprite* _space_to_start;
     
     Sprite* _granade;
     
@@ -84,6 +90,8 @@ class Game {
     Sprite* _arrow_small;
     
     Sprite* _pickup_image;
+    
+    Sprite* _controls_image;
     
     std::vector<Sprite*> _title;
     

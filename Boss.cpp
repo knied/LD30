@@ -35,7 +35,11 @@ Sprite* Boss::sprite() const {
 }
 
 Mth::Matrix<float, 3, 3> Boss::transformation() const {
-    return Mth::Matrix<float, 3, 3>();
+    Mth::Matrix<float, 3, 3> trafo;
+    if (in_jump) {
+        trafo(1, 2) = 64.0f * Mth::sin(jump_timer * Mth::pi);
+    }
+    return trafo;
 }
 
 void Boss::update(float dt) {
@@ -71,6 +75,14 @@ void Boss::update(float dt) {
     if (fade < 0.0f) {
         fade = 0.0f;
     }
+    
+    if (jump_timer > 0.0f) {
+        jump_timer -= 4.0f * dt;
+    }
+    
+    if (jump_cooldown > 0.0f) {
+        jump_cooldown -= dt;
+    }
 }
 
 Mth::CVector<float, 2> Boss::fire_position() const {
@@ -83,4 +95,14 @@ Mth::CVector<float, 2> Boss::granade_position() const {
 
 void Boss::set_animation(int i) {
     _animation = i;
+}
+
+bool Boss::jump() {
+    if (jump_cooldown <= 0.0f) {
+        in_jump = true;
+        jump_timer = 1.0f;
+        jump_cooldown = 1.0f;
+        return true;
+    }
+    return false;
 }

@@ -33,6 +33,10 @@ public:
     float granade_timer_reset;
     float granade_timer;
     
+    float jump_timer = 0.0f;
+    float jump_cooldown = 0.0f;
+    bool in_jump = false;
+    
     float _timer = 0.0f;
     int state = 0;
     
@@ -42,6 +46,7 @@ public:
     Mth::CVector<float, 2> fire_position() const;
     Mth::CVector<float, 2> granade_position() const;
     
+    bool jump();
     void update(float dt);
     void set_animation(int i);
 };

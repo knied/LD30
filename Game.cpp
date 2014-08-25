@@ -30,7 +30,7 @@ _next_entity(1), _shake_x(0.0f), _shake_y(0.0f), _shake_x_feq(0.0f), _shake_y_fe
     music_channel = _mixer.play(*_logo_musik, 0, 1);
     
     SDLImage image_loader(system);
-    _title.push_back(new Sprite(image_loader, "Title_1.png"));
+    _title.push_back(new Sprite(image_loader, "Title_0.png"));
     
     Mth::Matrix<float, 3, 3> trafo = Mth::make_matrix(1.0f, 0.0f, 512.0f,
                                                       0.0f, 1.0f, 384.0f,
@@ -75,6 +75,10 @@ void Game::load(SDLSystem const& system) {
     _w1_weapon_l0.push_back(new Sprite(image_loader, "w_1_weapon_l_1.png"));
     _w1_weapon_r0.push_back(new Sprite(image_loader, "w_1_weapon_r_0.png"));
     _w1_weapon_r0.push_back(new Sprite(image_loader, "w_1_weapon_r_1.png"));
+    _w1_weapon_l1.push_back(new Sprite(image_loader, "w_1_grenade_l_0.png"));
+    _w1_weapon_l1.push_back(new Sprite(image_loader, "w_1_grenade_l_1.png"));
+    _w1_weapon_r1.push_back(new Sprite(image_loader, "w_1_grenade_r_0.png"));
+    _w1_weapon_r1.push_back(new Sprite(image_loader, "w_1_grenade_r_1.png"));
     _bullet0 = new Sprite(image_loader, "Bullet.png");
     _world_f0 = new Sprite(image_loader, "world_1_1.png");
     _world_b0 = new Sprite(image_loader, "world_1_2.png");
@@ -84,6 +88,7 @@ void Game::load(SDLSystem const& system) {
     _explosion.push_back(new Sprite(image_loader, "Explo_3.png"));
     _explosion.push_back(new Sprite(image_loader, "Explo_4.png"));
     _granade = new Sprite(image_loader, "granate.png");
+    _space_to_start = new Sprite(image_loader, "Title_1.png");
     _title.push_back(new Sprite(image_loader, "Title_2.png"));
     _title.push_back(new Sprite(image_loader, "Title_3.png"));
     _title.push_back(new Sprite(image_loader, "Title_4.png"));
@@ -112,7 +117,8 @@ void Game::load(SDLSystem const& system) {
     _arrow_big = new Sprite(image_loader, "arrow_big.png");
     _arrow_small = new Sprite(image_loader, "arrow_small.png");
     _pickup_image = new Sprite(image_loader, "powerup.png");
-    _loose_screen = new Sprite(image_loader, "Screen_Lose.png");
+    _win_screen = new Sprite(image_loader, "screen_win.png");
+    _loose_screen = new Sprite(image_loader, "screen_lose.png");
     _boss_stand_l0.push_back(new Sprite(image_loader, "endboss_stand_l_0.png"));
     _boss_stand_l0.push_back(new Sprite(image_loader, "endboss_stand_l_1.png"));
     _boss_stand_r0.push_back(new Sprite(image_loader, "endboss_stand_r_0.png"));
@@ -125,6 +131,12 @@ void Game::load(SDLSystem const& system) {
     _boss_walk_r0.push_back(new Sprite(image_loader, "endboss_walk_r_1.png"));
     _boss_walk_r0.push_back(new Sprite(image_loader, "endboss_walk_r_2.png"));
     _boss_walk_r0.push_back(new Sprite(image_loader, "endboss_walk_r_3.png"));
+    _controls_image = new Sprite(image_loader, "control.png");
+    _boss_jump.push_back(new Sprite(image_loader, "endboss_jump_0.png"));
+    _boss_jump.push_back(new Sprite(image_loader, "endboss_jump_1.png"));
+    _boss_jump.push_back(new Sprite(image_loader, "endboss_jump_2.png"));
+    _boss_jump.push_back(new Sprite(image_loader, "endboss_jump_3.png"));
+    _boss_jump.push_back(new Sprite(image_loader, "endboss_jump_4.png"));
     
     _shot.push_back(new SDLMixerChunk(_mixer, "Shot 01.ogg"));
     _shot.push_back(new SDLMixerChunk(_mixer, "Shot 02.ogg"));
@@ -142,6 +154,8 @@ void Game::load(SDLSystem const& system) {
     _win_sound = new SDLMixerChunk(_mixer, "Final Stage Logo.ogg");
     _kill_sound = new SDLMixerChunk(_mixer, "Dead01pitch.ogg");
     _kill_sound->set_volume(64);
+    
+    _continue = false;
 }
 
 void Game::reset_game() {
@@ -159,6 +173,8 @@ void Game::reset_game() {
     
     _prop_cache.clear();
     _prop_cache.push_back(0);
+    
+    
     
     //_reach_x = 2048.0f;
     //_show_reach = true;
@@ -299,6 +315,21 @@ void Game::init_stage(int stage) {
             _characters.insert(entity);
             _colliders.insert(entity);
         }
+        
+        /*{
+            Entity entity = _next_entity++;
+            Collider& collider = _components.add<ColliderComponent>(entity);
+            collider.radius = 64.0f;
+            collider.position = Mth::make_cvector(player_collider.position(0) + 2048.0f, 300.0f);
+            collider.group = CG_E;
+            std::shared_ptr<Boss>& boss = _components.add<BossComponent>(entity);
+            boss = std::shared_ptr<Boss>(new Boss(_boss_stand_l0, _boss_stand_r0,
+                                                  _boss_walk_l0, _boss_walk_r0));
+            boss->health = 20;
+            //character->fire_timer_reset = 0.8f;
+            _bosses.insert(entity);
+            _colliders.insert(entity);
+        }*/
     } else if (stage == 1) {
         //show_banner(2);
         
@@ -398,7 +429,7 @@ void Game::init_stage(int stage) {
             std::shared_ptr<Character>& character = _components.add<CharacterComponent>(entity);
             character = std::shared_ptr<Character>(new Character(_w1_stand_l0, _w1_stand_r0,
                                                                  _w1_walk_l0, _w1_walk_r0,
-                                                                 _w1_weapon_l0, _w1_weapon_r0));
+                                                                 _w1_weapon_l1, _w1_weapon_r1));
             //character->health = 100;
             character->weapon = 1;
             character->fire_timer_reset = 0.8f;
@@ -416,7 +447,7 @@ void Game::init_stage(int stage) {
             std::shared_ptr<Character>& character = _components.add<CharacterComponent>(entity);
             character = std::shared_ptr<Character>(new Character(_w1_stand_l0, _w1_stand_r0,
                                                                  _w1_walk_l0, _w1_walk_r0,
-                                                                 _w1_weapon_l0, _w1_weapon_r0));
+                                                                 _w1_weapon_l1, _w1_weapon_r1));
             //character->health = 100;
             character->weapon = 1;
             character->fire_timer_reset = 0.8f;
@@ -468,7 +499,7 @@ void Game::init_stage(int stage) {
             std::shared_ptr<Character>& character = _components.add<CharacterComponent>(entity);
             character = std::shared_ptr<Character>(new Character(_w1_stand_l0, _w1_stand_r0,
                                                                  _w1_walk_l0, _w1_walk_r0,
-                                                                 _w1_weapon_l0, _w1_weapon_r0));
+                                                                 _w1_weapon_l1, _w1_weapon_r1));
             //character->health = 100;
             character->weapon = 1;
             character->fire_timer_reset = 0.8f;
@@ -486,7 +517,7 @@ void Game::init_stage(int stage) {
             std::shared_ptr<Character>& character = _components.add<CharacterComponent>(entity);
             character = std::shared_ptr<Character>(new Character(_w1_stand_l0, _w1_stand_r0,
                                                                  _w1_walk_l0, _w1_walk_r0,
-                                                                 _w1_weapon_l0, _w1_weapon_r0));
+                                                                 _w1_weapon_l1, _w1_weapon_r1));
             //character->health = 100;
             character->weapon = 1;
             character->fire_timer_reset = 0.8f;
@@ -572,7 +603,7 @@ void Game::init_stage(int stage) {
             std::shared_ptr<Character>& character = _components.add<CharacterComponent>(entity);
             character = std::shared_ptr<Character>(new Character(_w1_stand_l0, _w1_stand_r0,
                                                                  _w1_walk_l0, _w1_walk_r0,
-                                                                 _w1_weapon_l0, _w1_weapon_r0));
+                                                                 _w1_weapon_l1, _w1_weapon_r1));
             //character->health = 100;
             character->weapon = 1;
             character->fire_timer_reset = 0.8f;
@@ -590,7 +621,7 @@ void Game::init_stage(int stage) {
             std::shared_ptr<Character>& character = _components.add<CharacterComponent>(entity);
             character = std::shared_ptr<Character>(new Character(_w1_stand_l0, _w1_stand_r0,
                                                                  _w1_walk_l0, _w1_walk_r0,
-                                                                 _w1_weapon_l0, _w1_weapon_r0));
+                                                                 _w1_weapon_l1, _w1_weapon_r1));
             //character->health = 100;
             character->weapon = 1;
             character->fire_timer_reset = 0.8f;
@@ -642,7 +673,7 @@ void Game::init_stage(int stage) {
             std::shared_ptr<Character>& character = _components.add<CharacterComponent>(entity);
             character = std::shared_ptr<Character>(new Character(_w1_stand_l0, _w1_stand_r0,
                                                                  _w1_walk_l0, _w1_walk_r0,
-                                                                 _w1_weapon_l0, _w1_weapon_r0));
+                                                                 _w1_weapon_l1, _w1_weapon_r1));
             //character->health = 100;
             character->weapon = 1;
             character->fire_timer_reset = 0.8f;
@@ -660,7 +691,7 @@ void Game::init_stage(int stage) {
             std::shared_ptr<Character>& character = _components.add<CharacterComponent>(entity);
             character = std::shared_ptr<Character>(new Character(_w1_stand_l0, _w1_stand_r0,
                                                                  _w1_walk_l0, _w1_walk_r0,
-                                                                 _w1_weapon_l0, _w1_weapon_r0));
+                                                                 _w1_weapon_l1, _w1_weapon_r1));
             //character->health = 100;
             character->weapon = 1;
             character->fire_timer_reset = 0.8f;
@@ -695,12 +726,25 @@ void Game::update_menu(float dt) {
                                                       0.0f, 0.0f, 1.0f);
     if (_game_state == GS_Title) {
         _renderer.add(_title[_title_counter], _projection * trafo, 0, 0.0f);
+        if (_title_counter == 0) {
+            trafo = transformation(790, 170);
+            _renderer.add(_space_to_start, _projection * trafo, -1, 0.0f);
+        }
     } else if (_game_state == GS_Loose) {
         _renderer.add(_loose_screen, _projection * trafo, 0, 0.0f);
+    } else if (_game_state == GS_Win) {
+        _renderer.add(_win_screen, _projection * trafo, 0, 0.0f);
     }
 }
 
 void Game::update_game(float dt) {
+    if (_game_state == GS_Reach && _stage_counter == 0) {
+        Mth::Matrix<float, 3, 3> trafo = Mth::make_matrix(1.0f, 0.0f, 750.0f,
+                                                          0.0f, 1.0f, 500.0f,
+                                                          0.0f, 0.0f, 1.0f);
+        _renderer.add(_controls_image, _projection * trafo, -10, 0.0f);
+    }
+    
     _arrow_timer += dt;
     if (_arrow_timer > 2.0f * Mth::pi) {
         _arrow_timer -= 2.0f * Mth::pi;
@@ -777,7 +821,7 @@ void Game::update_game(float dt) {
         std::shared_ptr<Bullet>& b = _components.add<BulletComponent>(bullet);
         b = std::shared_ptr<Bullet>(new Bullet(_bullet0));
         //b->look_x = player->look_x;
-        b->velocity = Mth::make_cvector(player->look_x * 2000.0f, 0.0f);
+        b->velocity = Mth::make_cvector(1.0f, 0.0f) * Mth::dot(player_collider.velocity, Mth::make_cvector(1.0f, 0.0f)) + Mth::make_cvector(player->look_x * 2000.0f, 0.0f);
         
         _shot[0]->set_volume(random_int(32, 128));
         _mixer.play(*_shot[0], 0, 4);
@@ -1135,6 +1179,15 @@ void Game::update_game(float dt) {
             }
         }
         
+        if (boss->in_jump) {
+            if (boss->jump_timer <= 0.0f) {
+                boss->in_jump = false;
+                start_shake(80.0f);
+                player->health -= 1;
+                player->fade = 1.0f;
+            }
+        }
+        
         boss->update(dt);
         
         if (boss->health <= 0) {
@@ -1212,8 +1265,8 @@ bool Game::update(SDLSystem const& system, float dt) {
                 std::cout << "reach " << _reach_x;
             }
         } else if (_game_state == GS_Stage) {
-            show_banner(0);
             if (_stage_counter < _stage_counter_max) {
+                show_banner(0);
                 _stage_counter++;
                 _game_state = GS_Reach;
                 std::cout << "reach " << _reach_x;
@@ -1409,7 +1462,7 @@ void Game::ai(Character& monster, Collider& monster_collider,
         
         std::shared_ptr<Granade>& b = _components.add<GranadeComponent>(granade);
         b = std::shared_ptr<Granade>(new Granade(_granade));
-        b->velocity = Mth::make_cvector(1.0f, 0.0f) * 0.5f * Mth::dot(monster_collider.velocity, Mth::make_cvector(1.0f, 0.0f)) + Mth::make_cvector(monster.look_x * 200.0f, 0.0f);
+        b->velocity = Mth::make_cvector(1.0f, 0.0f) * 0.5f * Mth::dot(monster_collider.velocity, Mth::make_cvector(1.0f, 0.0f)) + Mth::make_cvector(monster.look_x * 400.0f, 0.0f);
         b->explosion_time *= 2.0f;
     }
 }
@@ -1428,47 +1481,65 @@ void Game::boss_ai(Boss& monster, Collider& monster_collider,
     }
     
     monster.look_x = look_x;
-    if (length < 2000.0f && length > 100.0f) {
-        monster_collider.velocity = direction * 300.0f;
-        monster.set_animation(1);
-    } else if (length < 500.0f && Mth::abs(length_y) > 32.0f) {
-        monster_collider.velocity = up * Mth::signum(length_y) * 150.0f;
-        monster.set_animation(1);
+    if (!monster.in_jump && monster.jump_cooldown <= 0.0f) {
+        if (length < 2000.0f && length > 100.0f) {
+            monster_collider.velocity = direction * 300.0f;
+            monster.set_animation(1);
+        } else if (length < 500.0f && Mth::abs(length_y) > 32.0f) {
+            monster_collider.velocity = up * Mth::signum(length_y) * 150.0f;
+            monster.set_animation(1);
+        } else {
+            monster.set_animation(0);
+        }
     } else {
         monster.set_animation(0);
     }
     
-    if (monster.weapon == 0 && monster.fire_timer <= 0.0f && length < 500.0f) {
-        monster.fire_timer = monster.fire_timer_reset;
-        Entity bullet = _next_entity++;
-        Collider& collider = _components.add<ColliderComponent>(bullet);
-        collider.radius = 8.0f;
-        collider.position = monster_collider.position + monster.fire_position();
-        collider.group = CG_EB;
-        _colliders.insert(bullet);
-        _bullets.insert(bullet);
-        
-        std::shared_ptr<Bullet>& b = _components.add<BulletComponent>(bullet);
-        b = std::shared_ptr<Bullet>(new Bullet(_bullet0));
-        b->end_time = 2.0f;
-        //b->look_x = monster.look_x;
-        b->velocity = Mth::make_cvector(monster.look_x * 1500.0f, 0.0f);
-        
-        _mixer.play(*_shot[1], 0, 2);
-    } else if (monster.weapon == 1 && monster.granade_timer <= 0.0f && length < 500.0f) {
-        monster.granade_timer = monster.granade_timer_reset;
-        Entity granade = _next_entity++;
-        Collider& collider = _components.add<ColliderComponent>(granade);
-        collider.radius = 8.0f;
-        collider.position = monster_collider.position + monster.fire_position();
-        collider.group = CG_EG;
-        _colliders.insert(granade);
-        _granades.insert(granade);
-        
-        std::shared_ptr<Granade>& b = _components.add<GranadeComponent>(granade);
-        b = std::shared_ptr<Granade>(new Granade(_granade));
-        b->velocity = Mth::make_cvector(1.0f, 0.0f) * 0.5f * Mth::dot(monster_collider.velocity, Mth::make_cvector(1.0f, 0.0f)) + Mth::make_cvector(monster.look_x * 400.0f, 0.0f);
-        b->explosion_time *= 2.0f;
+    if (!monster.in_jump && length < 150.0f) {
+        if (monster.jump()) {
+            Entity explosion = _next_entity++;
+            std::shared_ptr<Smoke>& smoke = _components.add<SmokeComponent>(explosion);
+            smoke = std::shared_ptr<Smoke>(new Smoke(_boss_jump));
+            smoke->position = monster_collider.position - Mth::make_cvector(0.0f, 100.0f);
+            smoke->deal_damage = false;
+            smoke->end_time = 0.5f;
+            _smokes.insert(explosion);
+        }
+    }
+    
+    if (!monster.in_jump && monster.jump_cooldown <= 0.0f) {
+        if (monster.weapon == 0 && monster.fire_timer <= 0.0f && length < 500.0f) {
+            monster.fire_timer = monster.fire_timer_reset;
+            Entity bullet = _next_entity++;
+            Collider& collider = _components.add<ColliderComponent>(bullet);
+            collider.radius = 8.0f;
+            collider.position = monster_collider.position + monster.fire_position();
+            collider.group = CG_EB;
+            _colliders.insert(bullet);
+            _bullets.insert(bullet);
+            
+            std::shared_ptr<Bullet>& b = _components.add<BulletComponent>(bullet);
+            b = std::shared_ptr<Bullet>(new Bullet(_bullet0));
+            b->end_time = 2.0f;
+            //b->look_x = monster.look_x;
+            b->velocity = Mth::make_cvector(monster.look_x * 1500.0f, 0.0f);
+            
+            _mixer.play(*_shot[1], 0, 2);
+        } else if (monster.weapon == 1 && monster.granade_timer <= 0.0f && length < 500.0f) {
+            monster.granade_timer = monster.granade_timer_reset;
+            Entity granade = _next_entity++;
+            Collider& collider = _components.add<ColliderComponent>(granade);
+            collider.radius = 8.0f;
+            collider.position = monster_collider.position + monster.fire_position();
+            collider.group = CG_EG;
+            _colliders.insert(granade);
+            _granades.insert(granade);
+            
+            std::shared_ptr<Granade>& b = _components.add<GranadeComponent>(granade);
+            b = std::shared_ptr<Granade>(new Granade(_granade));
+            b->velocity = Mth::make_cvector(1.0f, 0.0f) * 0.5f * Mth::dot(monster_collider.velocity, Mth::make_cvector(1.0f, 0.0f)) + Mth::make_cvector(monster.look_x * 400.0f, 0.0f);
+            b->explosion_time *= 2.0f;
+        }
     }
 }
 
