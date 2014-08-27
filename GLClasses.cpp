@@ -130,8 +130,8 @@ namespace GLInternal {
     template<> GLuint GLBindTextureLock<GL_TEXTURE29>::_bound_texture = 0;
     template<> GLuint GLBindTextureLock<GL_TEXTURE30>::_bound_texture = 0;
     template<> GLuint GLBindTextureLock<GL_TEXTURE31>::_bound_texture = 0;
-    GLuint GLBindRenderbufferLock::_bound_renderbuffer = 0;
-    GLuint GLBindFramebufferLock::_bound_framebuffer = 0;
+    //GLuint GLBindRenderbufferLock::_bound_renderbuffer = 0;
+    //GLuint GLBindFramebufferLock::_bound_framebuffer = 0;
     
 }
 

@@ -19,6 +19,8 @@ class Sprite {
     GLVertexArray _vertex_array;
     GLBuffer _buffer;
     GLTexture _texture;
+    int _width;
+    int _height;
     
 public:
     typedef Mth::CVector<uint8_t, 4> Color;

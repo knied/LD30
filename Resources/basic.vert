@@ -1,11 +1,15 @@
-#version 330 core
+//#version 330 core
+#version 120
 
-layout(location = 0) in vec2 vertex;
-layout(location = 1) in vec2 texcoord;
+//layout(location = 0) in vec2 vertex;
+//layout(location = 1) in vec2 texcoord;
+attribute vec2 vertex;
+attribute vec2 texcoord;
 
 uniform mat3 model_view;
 
-out vec2 v_texcoord;
+//out vec2 v_texcoord;
+varying vec2 v_texcoord;
 
 void main() {
     v_texcoord = texcoord;

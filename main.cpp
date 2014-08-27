@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include "SDLClasses.h"
-#include "gl3w.h"
+//#include "gl3w.h"
 #include "Game.h"
 
 #ifdef __APPLE__
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
         }
     }*/
     
-    if (gl3wInit()) {
+    /*if (gl3wInit()) {
         std::cout << "ERROR: gl3w could not be initialized." << std::endl;
         std::cout << "exiting..." << std::endl;
         return -1;
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
         std::cout << "ERROR: This system does not support OpenGL 3.2." << std::endl;
         std::cout << "exiting..." << std::endl;
         return -1;
-    }
+    }*/
     
     Game game(system);
     gl_window.swap();

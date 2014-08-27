@@ -16,7 +16,8 @@
 #include <string>
 #include <vector>
 //#include <OpenGL/gl3.h>
-#include "gl3w.h"
+//#include "gl3w.h"
+#include <SDL2/SDL_opengl.h>
 
 #include "MthMatrix.h"
 //#include "Math.h"
@@ -394,7 +395,7 @@ public:
     friend class GLBindVertexArray;
     
     GLVertexArray() : _vertex_array(0), _size(0) {
-        glGenVertexArrays(1, &_vertex_array);
+        //glGenVertexArrays(1, &_vertex_array);
     }
     GLVertexArray(GLVertexArray&& vertex_array) : _vertex_array(std::move(vertex_array._vertex_array)), _size(std::move(vertex_array._size)) {
         vertex_array._vertex_array = 0;
@@ -402,12 +403,12 @@ public:
     }
     ~GLVertexArray() {
         if (_vertex_array != 0) {
-            glDeleteVertexArrays(1, &_vertex_array);
+            //glDeleteVertexArrays(1, &_vertex_array);
         }
     }
     const GLVertexArray& operator = (GLVertexArray&& vertex_array) {
         if (_vertex_array != 0) {
-            glDeleteVertexArrays(1, &_vertex_array);
+            //glDeleteVertexArrays(1, &_vertex_array);
         }
         
         _vertex_array = std::move(vertex_array._vertex_array);
@@ -446,10 +447,10 @@ public:
         }
         
         _bound_vertex_array = _vertex_array.vertex_array();
-        glBindVertexArray(_vertex_array.vertex_array());
+        //glBindVertexArray(_vertex_array.vertex_array());
     }
     ~GLBindVertexArray() {
-        glBindVertexArray(0);
+        //glBindVertexArray(0);
         _bound_vertex_array = 0;
     }
     
@@ -572,9 +573,9 @@ public:
         for (GLuint index = 0; index < attribute_names.size(); ++index) {
             glBindAttribLocation(_program, index, attribute_names[index].c_str());
         }
-        for (GLuint index = 0; index < frag_data_names.size(); ++index) {
+        /*for (GLuint index = 0; index < frag_data_names.size(); ++index) {
             glBindFragDataLocation(_program, index, frag_data_names[index].c_str());
-        }
+        }*/
         
         link_program();
         
@@ -591,9 +592,9 @@ public:
     GLint uniform_location(const std::string& uniform_name) const {
         return glGetUniformLocation(_program, uniform_name.c_str());
     }
-    GLint frag_data_location(const std::string& frag_data_name) const {
+    /*GLint frag_data_location(const std::string& frag_data_name) const {
         return glGetFragDataLocation(_program, frag_data_name.c_str());
-    }
+    }*/
     
     GLuint program() const {
         return _program;
@@ -781,7 +782,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 // The OpenGL renderbuffer resource.
 
-class GLRenderbuffer {
+/*class GLRenderbuffer {
     GLuint _renderbuffer;
     
     GLRenderbuffer(const GLRenderbuffer&);
@@ -819,12 +820,12 @@ namespace GLInternal {
     struct GLBindRenderbufferLock {
         static GLuint _bound_renderbuffer;
     }; // GLBindRenderbufferLock
-}
+}*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // A helper to bind and manipulate the renderbuffer.
 
-class GLBindRenderbuffer : private GLInternal::GLBindRenderbufferLock {
+/*class GLBindRenderbuffer : private GLInternal::GLBindRenderbufferLock {
     GLRenderbuffer& _renderbuffer;
     
 public:
@@ -842,11 +843,12 @@ public:
         glRenderbufferStorage(GL_RENDERBUFFER, internalformat, width, height);
     }
 }; // GLBindRenderbuffer
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 // The OpenGL framebuffer resource.
 
-class GLFramebuffer {
+/*class GLFramebuffer {
     GLuint _framebuffer;
     
     GLFramebuffer(const GLFramebuffer&);
@@ -875,6 +877,7 @@ public:
         return _framebuffer;
     }
 }; // GLFramebuffer
+ */
 
 namespace GLInternal {
     struct GLBindFramebufferLock {
@@ -885,7 +888,7 @@ namespace GLInternal {
 ////////////////////////////////////////////////////////////////////////////////
 // A helper to bind and manipulate a framebuffer.
 
-class GLBindFramebuffer : private GLInternal::GLBindFramebufferLock {
+/*class GLBindFramebuffer : private GLInternal::GLBindFramebufferLock {
     GLBindFramebuffer(const GLBindFramebuffer&);
     const GLBindFramebuffer& operator = (const GLBindFramebuffer&);
     
@@ -913,6 +916,7 @@ public:
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment, GL_RENDERBUFFER, renderbuffer.renderbuffer());
     }
 }; // GLBindFramebuffer
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 

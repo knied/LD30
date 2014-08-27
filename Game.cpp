@@ -8,7 +8,7 @@
 
 #include "Game.h"
 #include <iostream>
-#include "gl3w.h"
+//#include "gl3w.h"
 #include "TextFile.h"
 #include "Transformation.h"
 

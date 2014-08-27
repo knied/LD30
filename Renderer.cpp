@@ -13,10 +13,14 @@ Renderer::Renderer(SDLSystem const& system) {
     TextFile vert(system.resource_path() + "basic.vert");
     TextFile frag(system.resource_path() + "basic.frag");
     
-    _program.load_shaders(vert.content(), frag.content(), {}, {});
+    _program.load_shaders(vert.content(), frag.content(), {"vertex", "texcoord"}, {});
     _model_view_location = _program.uniform_location("model_view");
     _texture0_location = _program.uniform_location("texture0");
     _fade_location = _program.uniform_location("fade");
+    
+    std::cout << "model_view: " << _model_view_location << std::endl;
+    std::cout << "texture0: " << _texture0_location << std::endl;
+    std::cout << "fade: " << _fade_location << std::endl;
 }
 
 void Renderer::add(Sprite* sprite, Mth::Matrix<float, 3, 3> const& trafo, int layer, float fade) {
