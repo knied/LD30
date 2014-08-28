@@ -15,7 +15,6 @@
 #include <SDL2_image/SDL_image.h>
 #else
 #include <SDL2/SDL_image.h>
-#include <GL/gl.h>
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -85,9 +84,6 @@ SDLGLWindow::SDLGLWindow(SDLSystem const& system, int width, int height)
 		_error = true;
 		return;
 	}
-#ifndef __APPLE__
-		std::cout << "OpenGL Version:" << glGetString(GL_VERSION) << std::endl;
-#endif
 	error = SDL_GetError();
 	if (error.length() > 0) std::cout << error << std::endl;
 }

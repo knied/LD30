@@ -10,6 +10,7 @@
 #define LD30Xcode_GameComponents_h
 
 #include <vector>
+#include <memory>
 #include "Components.h"
 #include "MthMatrix.h"
 #include "Character.h"

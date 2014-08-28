@@ -24,6 +24,8 @@ int main(int argc, char* argv[]) {
     
 #ifdef __APPLE__
     std::string resource_path = macosx_resources_path();
+#else
+    std::string resource_path = "Resources";
 #endif
     
     SDLSystem system(resource_path);
@@ -35,6 +37,13 @@ int main(int argc, char* argv[]) {
     SDLGLWindow gl_window(system, 1024, 768);
     if (!gl_window.valid()) {
         std::cout << "ERROR: SDL OpenGL window or context could not be initialized." << std::endl;
+        std::cout << "exiting..." << std::endl;
+        return -1;
+    }
+    
+    GLenum error = glewInit();
+    if (error != GLEW_OK) {
+        std::cout << "ERROR: Unable to initialize glew. (" << glewGetErrorString(error) << ")" << std::endl;
         std::cout << "exiting..." << std::endl;
         return -1;
     }
