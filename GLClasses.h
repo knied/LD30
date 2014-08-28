@@ -15,14 +15,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-//#include <OpenGL/gl3.h>
-//#include "gl3w.h"
-//#include <SDL2/SDL_opengl.h>
+#define GLEW_STATIC
 #include "GL/glew.h"
-
 #include "MthMatrix.h"
-//#include "Math.h"
-//#include "Image.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Some internaly used helpers

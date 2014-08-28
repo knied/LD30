@@ -79,7 +79,6 @@ Sprite::~Sprite() {
 
 void Sprite::draw() {
     GLBindTexture<GL_TEXTURE0> bind_texture(_texture);
-    //GLBindBuffer bind_buffer(_buffer);
     GLBindVertexArray bind_vertex_array(_vertex_array);
     bind_vertex_array.set(_buffer, {
         std::tuple<GLuint, size_t, bool>(0,0,true),

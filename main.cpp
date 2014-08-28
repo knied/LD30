@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include "SDLClasses.h"
-//#include "gl3w.h"
 #include "Game.h"
 
 #ifdef __APPLE__
@@ -47,32 +46,6 @@ int main(int argc, char* argv[]) {
         std::cout << "exiting..." << std::endl;
         return -1;
     }
-    
-    /*SDLMixer mixer(system);
-    if (!mixer.valid()) {
-        std::cout << "ERROR: SDL_mixer could not be initialized." << std::endl;
-        std::cout << "exiting..." << std::endl;
-        return -1;
-    }*/
-    /*SDLMixerChunk chunk(mixer, "Rayman_2_music_sample.ogg");
-    int channel = -1;
-    if (chunk.valid()) {
-        channel = mixer.play(chunk, 1, 3);
-        if (channel >= 0) {
-            std::cout << "playing on channel: " << channel << std::endl;
-        }
-    }*/
-    
-    /*if (gl3wInit()) {
-        std::cout << "ERROR: gl3w could not be initialized." << std::endl;
-        std::cout << "exiting..." << std::endl;
-        return -1;
-    }
-    if (!gl3wIsSupported(3, 2)) {
-        std::cout << "ERROR: This system does not support OpenGL 3.2." << std::endl;
-        std::cout << "exiting..." << std::endl;
-        return -1;
-    }*/
     
     Game game(system);
     gl_window.swap();
